@@ -12,6 +12,10 @@ Contains action creators for Redux. The event-based sync logic lies in `actions/
 
 A module that acts as a wrapper around the Firebase library. All API calls are sent from functions that lie here.
 
+## cloud
+
+Contains backend code that runs on Google servers in a managed environment (with [Cloud Functions](https://firebase.google.com/docs/functions)).
+
 ## components
 
 Some basic UI components. I use FormContainer as a parent to form elements in order to observe errors during submission and nicely animate in/out an error box accordingly.
