@@ -85,7 +85,7 @@ let ResidencyDetailsScreen = ({
   const [residencyCity, setResidencyCity] = useState(initialResidencyCity);
   const [fromDate, setFromDate] = useState(initialFromDate);
   const [isFromDatePickerOpen, setIsFromDatePickerOpen] = useState(false);
-  const [toDate, setToDate] = useState(initialToDate);
+  const [toDate, setToDate] = useState<ShortDate | null>(initialToDate);
   const [isToDatePickerOpen, setIsToDatePickerOpen] = useState(false);
   const [inputsHaveChanged, setInputsHaveChanged] = useState(false);
   const firstCall = useRef(true);
@@ -192,7 +192,7 @@ let ResidencyDetailsScreen = ({
               maxDate={preCurrentDate}
               setDate={(d: ShortDate) => {
                 setFromDate(d);
-                if (toDate.diff(d) < RESIDENCY_MIN_LENGTH) {
+                if (toDate && toDate.diff(d) < RESIDENCY_MIN_LENGTH) {
                   setToDate(d.getAdjacentDate(RESIDENCY_MIN_LENGTH));
                 }
               }}
@@ -279,7 +279,18 @@ function findInconsistency(
   return inconsistency;
 }
 
-ResidencyDetailsScreen = React.memo(ResidencyDetailsScreen);
+ResidencyDetailsScreen = React.memo(
+  ResidencyDetailsScreen,
+  (prevProps, nextProps) => {
+    if (
+      prevProps.progress.status === 'SUCCESS' &&
+      nextProps.progress.status === null
+    ) {
+      return true;
+    }
+    return false;
+  }
+);
 
 ResidencyDetailsScreen.navigationOptions = ({ navigation }): {} => {
   const title =

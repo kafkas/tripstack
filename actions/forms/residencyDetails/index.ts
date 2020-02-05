@@ -1,6 +1,6 @@
 import * as API from '../../../api';
 import * as Database from '../../../database';
-import CityCore from '../../../data-types/CityCore';
+import City from '../../../data-types/City';
 import ShortDate from '../../../data-types/ShortDate';
 import store from '../../../store';
 import { refreshData } from '../../data';
@@ -10,7 +10,7 @@ import * as AC from './actionCreators';
 import { GRACEFUL_EXIT_DURATION } from '../../../styles/animations';
 
 export function createResidency(
-  city: CityCore,
+  city: City,
   fromDate: ShortDate,
   toDate: ShortDate | null,
   navigation: Navigation,
@@ -20,18 +20,18 @@ export function createResidency(
     dispatch(AC.startChangeResidencyDetailsRequest('CREATE'));
     const { uid } = store.getState().auth.userInfo;
     try {
-      // Prepare travel details for Firestore
+      // Prepare residency details for Firestore
       const firestoreResidencyDoc: API.FirestoreResidencyDoc = {
         cityCode: city.getCode(),
         fromDate: fromDate.getYMDString(),
         toDate: toDate ? toDate.getYMDString() : null,
       };
-      // Send the request and get the newly generated id for the travel.
+      // Send the request and get the newly generated id for the residency.
       const { id } = await API.requestAddUserResidency(
         uid,
         firestoreResidencyDoc
       );
-      // Prepare travel details for database
+      // Prepare residency details for database
       const databaseResidencyDoc = ObjectUtil.copyExcept(firestoreResidencyDoc);
       // Add the newly generated id as well
       databaseResidencyDoc.id = id;
@@ -52,7 +52,7 @@ export function createResidency(
 
 export function updateResidency(
   residencyID: string,
-  city: CityCore,
+  city: City,
   fromDate: ShortDate,
   toDate: ShortDate | null,
   navigation: Navigation,
@@ -62,7 +62,7 @@ export function updateResidency(
     dispatch(AC.startChangeResidencyDetailsRequest('UPDATE'));
     const { uid } = store.getState().auth.userInfo;
     try {
-      // Prepare travel details for Firestore
+      // Prepare residency details for Firestore
       const firestoreResidencyDoc: Partial<API.FirestoreResidencyDoc> = {
         cityCode: city.getCode(),
         fromDate: fromDate.getYMDString(),
@@ -73,7 +73,7 @@ export function updateResidency(
         residencyID,
         firestoreResidencyDoc
       );
-      // Prepare travel details for database
+      // Prepare residency details for database
       const databaseResidencyDoc = ObjectUtil.copyExcept(firestoreResidencyDoc);
       // Add the newly generated id as well
       databaseResidencyDoc.id = residencyID;

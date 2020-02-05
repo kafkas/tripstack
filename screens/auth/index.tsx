@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement } from 'react';
+import React, { useState, useEffect, useRef, ReactElement } from 'react';
 import {
   View,
   Animated,
@@ -69,7 +69,8 @@ let AuthScreen = ({
   const [password, setPassword] = useState('');
   const [, keyboardScale] = useKeyboard(false);
 
-  const scrollX = new Animated.Value(0);
+  const scrollXRef = useRef(new Animated.Value(0));
+  const scrollX = scrollXRef.current;
   const safeScrollX = scrollX.interpolate({
     inputRange: [-5 * W_WIDTH, 0, W_WIDTH, 5 * W_WIDTH],
     outputRange: [-1, 0, 1, 2],
@@ -161,7 +162,7 @@ let AuthScreen = ({
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={100}
+          scrollEventThrottle={1}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { x: scrollX } } }],
             { useNativeDriver: false }
